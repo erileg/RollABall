@@ -15,5 +15,6 @@ public class PickUpController : MonoBehaviour
     void Update()
     {
         transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime * speed);
+        transform.Translate(Vector3.up * Mathf.Sin(Time.time * speed) * 0.03f, Space.World);
     }
 }
