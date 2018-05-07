@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed;
-    public Text countText;
-    public Text winText;
-    public ParticleSystem fountain;
 
     private Rigidbody rb;
-    private int count;
+    private GameController gameController;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-
-        count = 0;
-        SetCountText();
     }
 
     private void FixedUpdate()
@@ -26,9 +21,13 @@ public class PlayerController : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        Vector3 movement = Camera.current.transform.TransformDirection(new Vector3(moveHorizontal, 0.0f, moveVertical));
+        Camera currentCam = Camera.current;
+        if (currentCam)
+        {
+            Vector3 movement = currentCam.transform.TransformDirection(new Vector3(moveHorizontal, 0.0f, moveVertical));
+            rb.AddForce(movement * speed);
+        }
 
-        rb.AddForce(movement * speed);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,18 +35,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Pick Up"))
         {
             other.gameObject.SetActive(false);
-            count++;
-            SetCountText();
-        }
-    }
-
-    void SetCountText()
-    {
-        countText.text = "Count: " + count.ToString();
-        if(count >= 12)
-        {
-            fountain.gameObject.SetActive(true);
-            winText.gameObject.SetActive(true);
+            EventManager.TriggerEvent("PickUp");
         }
     }
 }

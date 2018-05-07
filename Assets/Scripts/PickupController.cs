@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotator : MonoBehaviour
+public class PickUpController : MonoBehaviour
 {
     private float speed;
 
@@ -16,4 +16,10 @@ public class Rotator : MonoBehaviour
     {
         transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime * speed);
     }
+
+    public void OnPickUp()
+    {
+        gameObject.SetActive(false);
+    }
+
 }
