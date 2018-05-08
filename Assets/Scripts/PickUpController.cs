@@ -8,13 +8,14 @@ public class PickUpController : MonoBehaviour
 
     void Start()
     {
-        speed = Random.Range(1.0f, 1.5f);
+        speed = Random.Range(2.0f, 2.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime * speed);
-        transform.Translate(Vector3.up * Mathf.Sin(Time.time * speed) * 0.03f, Space.World);
+		var oldPostion = transform.localPosition;
+		transform.localPosition = new Vector3(oldPostion.x, Mathf.Sin(Time.time * speed) + 1.5f, oldPostion.z);
     }
 }
