@@ -26,7 +26,13 @@ public class GameController : MonoBehaviour
         EventManager.StopListening("PickUp", OnPickUp);
     }
 
-    // Use this for initialization
+	void Awake()
+	{
+		mainCam.enabled = true;
+		birdCam.enabled = false;
+	}
+
+	// Use this for initialization
 	void Start()
     {
         pickUpCount = 0;
@@ -36,17 +42,20 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown("c"))
         {
             mainCam.enabled = !mainCam.enabled;
 			birdCam.enabled = !birdCam.enabled;
         }
 
-		if (GameOver() && Camera.current)
+		if (!GameOver() && Camera.current)
         {
 			var cam = Camera.current;
-			cam.transform.position = Vector3.Lerp(cam.transform.position, fireworksCam.transform.position, .3f * Time.deltaTime);
-			cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, fireworksCam.transform.rotation, .3f * Time.deltaTime);
+			if ((cam.transform.position - fireworksCam.transform.position).magnitude > 1f)
+			{
+				cam.transform.position = Vector3.Lerp(cam.transform.position, fireworksCam.transform.position, .3f * Time.deltaTime);
+				cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, fireworksCam.transform.rotation, .3f * Time.deltaTime);
+			}
 		}
 
 		if (GameOver() && Input.GetKey(KeyCode.Space))
