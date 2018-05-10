@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
 {
     public Camera mainCam;
     public Camera birdCam;
+	public Camera fireworksCam;
     public Text countText;
     public Text winText;
     public ParticleSystem fountain;
@@ -38,14 +39,22 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             mainCam.enabled = !mainCam.enabled;
-            birdCam.enabled = !birdCam.enabled;
+			birdCam.enabled = !birdCam.enabled;
         }
 
-        if (GameOver() && Input.GetKey(KeyCode.Space))
+		if (GameOver() && Camera.current)
+        {
+			var cam = Camera.current;
+			cam.transform.position = Vector3.Lerp(cam.transform.position, fireworksCam.transform.position, .3f * Time.deltaTime);
+			cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, fireworksCam.transform.rotation, .3f * Time.deltaTime);
+		}
+
+		if (GameOver() && Input.GetKey(KeyCode.Space))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
+
 
     void OnPickUp()
     {
@@ -54,7 +63,7 @@ public class GameController : MonoBehaviour
 
         if (GameOver())
         {
-            handleGameOver();
+            HandleGameOver();
         }
     }
 
@@ -63,8 +72,10 @@ public class GameController : MonoBehaviour
         countText.text = "Picked Up: " + pickUpCount;
     }
 
-    private void handleGameOver()
+	private void HandleGameOver()
     {
+		mainCam.GetComponent<CameraController>().enabled=false;
+
         fountain.gameObject.SetActive(true);
         winText.gameObject.SetActive(true);
     }
