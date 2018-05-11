@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
 	public Text countText;
 	public Text winText;
 	public ParticleSystem fountain;
+	public AudioClip pickUpSound;
 
 	private int pickUpCount;
 	private bool fireworksCamPosReached;
@@ -80,6 +81,7 @@ public class GameController : MonoBehaviour
 	{
 		pickUpCount++;
 		SetCountText();
+		GetComponent<AudioSource>().Play();
 
 		if (GameOver())
 		{
