@@ -13,31 +13,32 @@ public class GameController : MonoBehaviour
 	public Text winText;
 	public ParticleSystem fountain;
 
-	private PlayerController playerController;
 	private int pickUpCount;
 	private bool fireworksCamPosReached;
 
-	void OnEnable()
+	private void OnEnable()
 	{
 		EventManager.StartListening("PickUp", OnPickUp);
 	}
 
-	void OnDisable()
+	private void OnDisable()
 	{
 		EventManager.StopListening("PickUp", OnPickUp);
 	}
 
-	void Start()
+	private void Start()
 	{
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Locked;
+
 		mainCam.enabled = true;
 		birdCam.enabled = false;
 		pickUpCount = 0;
 		SetCountText();
-		Cursor.visible = false;
 		fireworksCamPosReached = false;
 	}
-    
-	void Update()
+
+	private void Update()
 	{
 		if (Input.GetKeyDown("c"))
 		{
@@ -45,13 +46,13 @@ public class GameController : MonoBehaviour
 			birdCam.enabled = !birdCam.enabled;
 		}
 
-        if (Input.GetKeyDown("g"))
-        {
-            pickUpCount = 12;
-            HandleGameOver();
-        }
+		if (Input.GetKeyDown("g"))
+		{
+			pickUpCount = 12;
+			HandleGameOver();
+		}
 
-        if (GameOver() && Input.GetKey(KeyCode.Space))
+		if (GameOver() && Input.GetKey(KeyCode.Space))
 		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
@@ -75,7 +76,7 @@ public class GameController : MonoBehaviour
 		}
 	}
 
-	void OnPickUp()
+	private void OnPickUp()
 	{
 		pickUpCount++;
 		SetCountText();
