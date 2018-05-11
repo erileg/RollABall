@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
     public float speed;
 
     private Vector3 startPos, endPos, direction;
-    private float touchTimeStart, touchTimeEnd, timeInterval;
 
     private Rigidbody rb;
     private GameController gameController;
@@ -24,17 +23,14 @@ public class PlayerController : MonoBehaviour
         
         if(Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            touchTimeStart = Time.time;
             var touchPos = Input.GetTouch(0).position;
             startPos = new Vector3(touchPos.x, 0, touchPos.y);
         }
 
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
         {
-            touchTimeEnd = Time.time;
             var touchPos = Input.GetTouch(0).position;
             endPos = new Vector3(touchPos.x, 0, touchPos.y);
-            timeInterval = touchTimeEnd - touchTimeStart;
             direction = endPos - startPos;
             rb.AddForce(direction * direction.magnitude * .002f);
         }
