@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
 
 	private PlayerController playerController;
 	private int pickUpCount;
-	private bool flag;
+	private bool fireworksCamPosReached;
 
 	void OnEnable()
 	{
@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour
 		pickUpCount = 0;
 		SetCountText();
 		Cursor.visible = false;
-		flag = false;
+		fireworksCamPosReached = false;
 	}
     
 	void Update()
@@ -45,7 +45,13 @@ public class GameController : MonoBehaviour
 			birdCam.enabled = !birdCam.enabled;
 		}
 
-		if (GameOver() && Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown("g"))
+        {
+            pickUpCount = 12;
+            HandleGameOver();
+        }
+
+        if (GameOver() && Input.GetKey(KeyCode.Space))
 		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
@@ -56,16 +62,15 @@ public class GameController : MonoBehaviour
 		if (GameOver() && Camera.current)
 		{
 			var cam = Camera.current;
-			if ((cam.transform.position - fireworksCam.transform.position).magnitude > 1f && !flag)
+			if ((cam.transform.position - fireworksCam.transform.position).magnitude > 1f && !fireworksCamPosReached)
 			{
 				cam.transform.position = Vector3.Lerp(cam.transform.position, fireworksCam.transform.position, .3f * Time.deltaTime);
 				cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, fireworksCam.transform.rotation, .3f * Time.deltaTime);
 			}
 			else
 			{
-				flag = true;
+				fireworksCamPosReached = true;
 				cam.transform.RotateAround(Vector3.zero, -Vector3.up, 10 * Time.deltaTime);
-				cam.transform.LookAt(Vector3.zero);
 			}
 		}
 	}
