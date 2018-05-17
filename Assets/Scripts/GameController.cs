@@ -32,8 +32,20 @@ public class GameController : MonoBehaviour
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 
-		mainCam.enabled = true;
-		birdCam.enabled = false;
+
+		if (SystemInfo.deviceType == DeviceType.Desktop)
+		{
+			mainCam.enabled = true;
+			birdCam.enabled = false;
+		}
+		else
+		{
+			mainCam.enabled = false;
+			birdCam.enabled = true;
+
+		}
+
+
 		pickUpCount = 0;
 		SetCountText();
 		fireworksCamPosReached = false;

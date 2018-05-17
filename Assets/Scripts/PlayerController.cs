@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
 	public float speed;
 
 	private Vector3 startPos, endPos, direction;
+	private float startTime;
 
 	private Rigidbody rb;
 	private GameController gameController;
@@ -18,45 +20,71 @@ public class PlayerController : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 	}
 
-	private void FixedUpdate()
+	protected void FixedUpdate()
 	{
+		var cam = Camera.current;
 
-		var currentCam = Camera.current;
-
-		if (currentCam)
+		if (cam)
 		{
-			// WASD and arrow keys
-            var moveHorizontal = Input.GetAxis("Horizontal");
-            var moveVertical = Input.GetAxis("Vertical");
-            var movement = currentCam.transform.TransformDirection(new Vector3(moveHorizontal, 0.0f, moveVertical));
-            rb.AddForce(movement * speed);
+			handleKeys(cam);
 
-			// Mouse Support
-			var mouseHoriztontal = Input.GetAxis("Mouse X");
-			var mouseVertical = Input.GetAxis("Mouse Y");
-			var mouseMovement = currentCam.transform.TransformDirection(new Vector3(mouseHoriztontal, 0, mouseVertical));
-			mouseMovement.y = 0;
-			rb.AddForce(mouseMovement * speed);
+			handleMouse(cam);
 
-			// Mobile Touch Support
-			if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-			{
-				var touchPos = Input.GetTouch(0).position;
-				startPos = new Vector3(touchPos.x, 0, touchPos.y);
-			}
+			handleTouch(cam);
 
-			if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
-			{
-				var touchPos = Input.GetTouch(0).position;
-				endPos = new Vector3(touchPos.x, 0, touchPos.y);
-				direction = endPos - startPos;
-
-				var touchMovement = currentCam.transform.TransformDirection(direction);
-				rb.AddForce(direction * direction.magnitude * .002f);
-			}
-
+			handleAccelerometer(cam);
 		}
 	}
+    
+	private void handleKeys(Camera cam)
+    {
+        var moveHorizontal = Input.GetAxis("Horizontal");
+        var moveVertical = Input.GetAxis("Vertical");
+        var movement = cam.transform.TransformDirection(new Vector3(moveHorizontal, 0, moveVertical));
+        
+		rb.AddForce(movement * speed);
+    }
+
+	private void handleMouse(Camera cam)
+	{
+		var moveHoriztontal = Input.GetAxis("Mouse X");
+		var moveVertical = Input.GetAxis("Mouse Y");
+		var movement = cam.transform.TransformDirection(new Vector3(moveHoriztontal, 0, moveVertical));
+        movement.y = 0;
+        
+		rb.AddForce(movement * speed);
+	}
+
+	private void handleAccelerometer(Camera cam)
+    {
+		var moveHoriztontal = Input.acceleration.x;
+		var moveVertical = Input.acceleration.z;
+		var movement = cam.transform.TransformDirection(new Vector3(moveHoriztontal, 0, moveVertical));
+		movement.y = 0;
+
+        rb.AddForce(movement * speed * 3);
+    }
+
+	private void handleTouch(Camera cam)
+    {
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            startPos = Input.GetTouch(0).position;
+            startTime = Time.time;
+        }
+
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
+        {
+            endPos = Input.GetTouch(0).position;
+            direction = endPos - startPos;
+			var movement = cam.transform.TransformDirection(direction);
+			movement.y = 0;
+
+			var intervall = Time.time - startTime;
+
+			rb.AddForce(movement / intervall / 1.5f);
+        }
+    }
 
 	private void OnTriggerEnter(Collider other)
 	{
