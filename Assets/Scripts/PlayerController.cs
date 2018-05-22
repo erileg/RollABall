@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 	private void handleAccelerometer(Camera cam)
     {
 		var moveHoriztontal = Input.acceleration.x;
-		var moveVertical = Input.acceleration.z;
+		var moveVertical = Input.acceleration.y;
 		var movement = cam.transform.TransformDirection(new Vector3(moveHoriztontal, 0, moveVertical));
 		movement.y = 0;
 
