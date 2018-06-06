@@ -75,17 +75,17 @@ public class GameController : MonoBehaviour
 	{
 		if (GameOver() && Camera.current)
 		{
-			var cam = Camera.current;
-			if ((cam.transform.position - fireworksCam.transform.position).magnitude > 1f && !fireworksCamPosReached)
-			{
-				cam.transform.position = Vector3.Lerp(cam.transform.position, fireworksCam.transform.position, .3f * Time.deltaTime);
-				cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, fireworksCam.transform.rotation, .3f * Time.deltaTime);
-			}
-			else
-			{
-				fireworksCamPosReached = true;
-				cam.transform.RotateAround(Vector3.zero, -Vector3.up, 10 * Time.deltaTime);
-			}
+			//var cam = Camera.current;
+			//if ((cam.transform.position - fireworksCam.transform.position).magnitude > 1f && !fireworksCamPosReached)
+			//{
+			//	cam.transform.position = Vector3.Lerp(cam.transform.position, fireworksCam.transform.position, .3f * Time.deltaTime);
+			//	cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, fireworksCam.transform.rotation, .3f * Time.deltaTime);
+			//}
+			//else
+			//{
+			//	fireworksCamPosReached = true;
+			//	cam.transform.RotateAround(Vector3.zero, -Vector3.up, 10 * Time.deltaTime);
+			//}
 		}
 	}
 
