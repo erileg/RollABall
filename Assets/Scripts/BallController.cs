@@ -32,7 +32,7 @@ public class BallController : MonoBehaviour
 
 			handleTouch(cam);
 
-			handleAccelerometer(cam);
+			//handleAccelerometer(cam);
 		}
 	}
     
@@ -54,16 +54,6 @@ public class BallController : MonoBehaviour
         
 		rb.AddForce(movement * speed);
 	}
-
-	private void handleAccelerometer(Camera cam)
-    {
-		var moveHoriztontal = Input.acceleration.x;
-		var moveVertical = Input.acceleration.y;
-		var movement = cam.transform.TransformDirection(new Vector3(moveHoriztontal, 0, moveVertical));
-		movement.y = 0;
-
-        rb.AddForce(movement * speed * 3);
-    }
 
 	private void handleTouch(Camera cam)
     {
