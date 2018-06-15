@@ -42,7 +42,7 @@ public class GameController : MonoBehaviour
 			HandleGameOver();
 		}
 
-		if (GameOver() && Input.GetKey(KeyCode.Space))
+        if (GameOver() && Input.GetKey(KeyCode.Space))
 		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
